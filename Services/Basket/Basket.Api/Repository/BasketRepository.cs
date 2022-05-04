@@ -6,11 +6,15 @@ namespace Basket.Api.Repository
     public class BasketRepository : IBasketRepository
     {
         private readonly IDistributedCache _Cache;
-        public BasketRepository(IDistributedCache cache)
+        private readonly ILogger<BasketRepository> _logger;
+        public BasketRepository(IDistributedCache cache, ILogger<BasketRepository> logger)
         {
+            _logger = logger;
+            _logger.LogInformation($"trying to establish connection");
             _Cache = cache;
+            _logger.LogInformation($"connection succedded");
         }
-        public async Task<Models.Basket?> GetBasketAsync(string username)
+        public async Task<Models.Basket> GetBasketAsync(string username)
         {
             var rawBytes = _Cache.GetString(username);
             if (rawBytes == null)
