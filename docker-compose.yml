@@ -1,26 +1,22 @@
 version: '3.4'
 
 services:
-  portainer:
-    image: portainer/portainer-ce
-  cataloguedb:
-    image: mongo
   basketdb:
     image: redis
-  catalogue.api:
-    image: ${DOCKER_REGISTRY-}catalogueapi
-    build:
-      context: .
-      dockerfile: Services/Catalogue/Catalogue.Api/Dockerfile
-  
   basket.api:
     image: ${DOCKER_REGISTRY-}basketapi
     build:
       context: .
       dockerfile: Services/Basket/Basket.Api/Dockerfile
-
+  cataloguedb:
+    image: mongo
+  catalogue.api:
+    image: ${DOCKER_REGISTRY-}catalogueapi
+    build:
+      context: .
+      dockerfile: Services/Catalogue/Catalogue.Api/Dockerfile
+  portainer:
+    image: portainer/portainer-ce
 volumes:
   portainer_data:
   mongo_store:
-
-

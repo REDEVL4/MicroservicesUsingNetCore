@@ -1,6 +1,41 @@
 version: '3.4'
 
+
 services:
+  cataloguedb:
+     container_name: cataloguedb
+     restart: always
+     ports:
+       - "27017:27017"
+     volumes: 
+       - mongo_store:/data/db
+  catalogue.api:
+    container_name: catalogue.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "Secrets:MongoCS=mongodb://cataloguedb:27017"
+      - "Secrets:Database=Microservices"
+      - "Secrets:Collection=Catalouge"
+    ports:
+      - "8000:80"
+    depends_on:
+      - cataloguedb
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379" 
+  
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "Secrets:RedisCS=basketdb:6379"
+    ports:
+      - "8001:80"
+    depends_on:
+      - basketdb
+  
   portainer:
     container_name: portainer
     restart: always
@@ -13,39 +48,6 @@ services:
     depends_on:
       - cataloguedb
       - basketdb
-  cataloguedb:
-    container_name: cataloguedb
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes: 
-      - mongo_store:/data/db
-  
-  basketdb:
-    container_name: basketdb
-    restart: always
-    ports:
-      - "6379:6379" 
+ 
 
-  catalogue.api:
-    container_name: catalogue.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "Secrets:MongoCS=mongodb://cataloguedb:27017"
-      - "Secrets:Database=Microservices"
-      - "Secrets:Collection=Catalouge"
-    ports:
-      - "8000:80"
-    depends_on:
-      - cataloguedb
-    
-  basket.api:
-    container_name: basket.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "Secrets:RedisCS=basketdb:6379"
-    ports:
-      - "8001:80"
-    depends_on:
-      - basketdb
 
