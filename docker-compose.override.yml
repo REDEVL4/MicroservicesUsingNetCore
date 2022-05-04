@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  portainer:
+    container_name: portainer
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - portainer_data:/data portainer/portainer-ce:2.11.1
+    ports:
+      - "8080:8000"
+      - "9000:9443"
+  cataloguedb:
+    container_name: cataloguedb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes: 
+      - mongo_store:/data/db 
+  catalogue.api:
+    container_name: catalogue.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "Secrets:MongoCS=mongodb://cataloguedb:27017"
+      - "Secrets:Database=Microservices"
+      - "Secrets:Collection=Catalouge"
+    ports:
+      - "8000:80"
+    depends_on:
+      - cataloguedb
+

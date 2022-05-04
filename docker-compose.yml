@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  portainer:
+    image: portainer/portainer-ce
+  cataloguedb:
+    image: mongo
+  catalogue.api:
+    image: ${DOCKER_REGISTRY-}catalogueapi
+    build:
+      context: .
+      dockerfile: Services/Catalogue/Catalogue.Api/Dockerfile
+
+volumes:
+  portainer_data:
+  mongo_store:
