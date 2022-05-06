@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "Discount.Grpc.Protos";
+
+service DiscountServices
+{
+	rpc GetDiscountedProduct (DiscountRequest) returns (DiscountResponse); 
+}
+
+message DiscountRequest
+{
+	string Productname=1;
+}
+message DiscountResponse
+{
+	int32 Id=1;
+	string Productname=2;
+	string Description=3;
+	float DiscountedPrice=4;
+}

@@ -1,7 +1,7 @@
-﻿using Discount.Api.DataAccess;
-using DiscountGRPC.Models;
+﻿using Discount.Grpc.DataAccess;
+using Discount.Grpc.Models;
 
-namespace DiscountGRPC.Repository
+namespace Discount.Grpc.Repository
 {
     public class DiscountRepository : IDiscountRepository
     {

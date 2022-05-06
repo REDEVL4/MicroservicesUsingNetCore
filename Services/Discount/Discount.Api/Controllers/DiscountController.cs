@@ -31,7 +31,7 @@ namespace Discount.Api.Controllers
             await _Client.AddDiscountedProductAsync(product);
             return Ok(new {Message="Added Sucessfully"});
         }
-        [HttpPatch("{productName}")]
+        [HttpPatch]
         public async Task<ActionResult> UpdateDiscountedProducts([FromBody] DiscountedProduct product)
         {
             await _Client.UpdateDiscountedProductAsync(product);

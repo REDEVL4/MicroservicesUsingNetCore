@@ -1,9 +1,8 @@
 ﻿using Dapper;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.Data;
 
-namespace Discount.Api.DataAccess
+namespace Discount.Grpc.DataAccess
 {
     public class GenericRepository : IGenericRepository
     {

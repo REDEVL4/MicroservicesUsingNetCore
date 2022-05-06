@@ -1,4 +1,4 @@
-﻿namespace DiscountGRPC.Models
+﻿namespace Discount.Grpc.Models
 {
     public class DiscountedProduct
     {

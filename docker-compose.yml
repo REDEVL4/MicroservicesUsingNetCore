@@ -27,12 +27,27 @@ services:
     build:
       context: .
       dockerfile: Services/Discount/Discount.Api/Dockerfile
+  
+      
+  discount.grpc:
+    image: ${DOCKER_REGISTRY-}discountgrpc
+    build:
+      context: .
+      dockerfile: Services\GRPC\Discount.Grpc\Dockerfile
 
 volumes:
   portainer_data:
   mongo_store:
   postgres_data:
   pdadmin_data:
+
+
+
+
+
+
+ 
+
 
 
 

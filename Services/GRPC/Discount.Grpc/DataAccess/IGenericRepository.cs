@@ -1,5 +1,5 @@
 ﻿
-namespace Discount.Api.DataAccess
+namespace Discount.Grpc.DataAccess
 {
     public interface IGenericRepository
     {

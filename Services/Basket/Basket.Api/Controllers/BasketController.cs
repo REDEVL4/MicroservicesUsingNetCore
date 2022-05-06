@@ -1,5 +1,5 @@
 ﻿using Basket.Api.Repository;
-using Microsoft.AspNetCore.Http;
+using Basket.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace Basket.Api.Controllers
 {
@@ -7,9 +7,11 @@ namespace Basket.Api.Controllers
     [ApiController]
     public class BasketController : ControllerBase
     {
+        private readonly DServices _services;
         private IBasketRepository _basketRepository;
-        public BasketController(IBasketRepository basketRepository)
+        public BasketController(IBasketRepository basketRepository,DServices services)
         {
+            _services = services;
             _basketRepository= basketRepository;
         }
         [HttpGet("{username}")]
@@ -19,10 +21,25 @@ namespace Basket.Api.Controllers
             return result;
         }
         [HttpPost]
-        public async Task<ActionResult<Models.Basket>> UpdateBasket([FromBody] Models.Basket basket)
+        public async Task<ActionResult<Models.Basket>> UpdateBasket([FromBody] Models.Basket? basket)
         {
-            var result = await _basketRepository.UpdateBasket(basket);
-            return result;
+            try
+            {
+
+                if (basket == null)
+                    return BadRequest();
+                foreach (var item in basket.Products)
+                {
+                    var discount = await _services.GetDiscount(item.ProductName);
+                    item.Cost -= (int)discount.DiscountedPrice;
+                }
+                var result = await _basketRepository.UpdateBasket(basket);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpDelete("{username}")]
         public async Task<ActionResult> RemoveBasket(string username)
