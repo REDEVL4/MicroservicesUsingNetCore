@@ -31,11 +31,19 @@ namespace Discount.Api.Repository
         }
         public async Task UpdateDiscountedProductAsync(DiscountedProduct product)
         {
+            var aquery = "select * from DiscountedProducts where ProductName=@ProductName";
+            var result = (await _Client.LoadData<DiscountedProduct, dynamic>(query: aquery, parameters: new { ProductName = product.ProductName })).SingleOrDefault();
+            if (result == null)
+                throw new Exception($"The Product {product.ProductName} Does Not Exist !!!");
             string squery = "update DiscountedProducts set Description=@Description,DiscountedPrice=@DiscountedPrice where ProductName=@ProductName";
             await _Client.InsertData<DiscountedProduct, dynamic>(query: squery, parameters: new { ProductName = product.ProductName, Description=product.Description, DiscountedPrice = product.DiscountedPrice });
         }
         public async Task DeleteDiscountedProductAsync(string productName)
         {
+            var aquery = "select * from DiscountedProducts where ProductName=@ProductName";
+            var result = (await _Client.LoadData<DiscountedProduct, dynamic>(query: aquery, parameters: new { ProductName =productName })).SingleOrDefault();
+            if (result == null)
+                throw new Exception($"The Product {productName} Does not Exits.");
             string squery = "delete from DiscountedProducts where ProductName=@ProductName";
             await _Client.InsertData<DiscountedProduct, dynamic>(parameters: new { ProductName = productName }, query: squery);
         }

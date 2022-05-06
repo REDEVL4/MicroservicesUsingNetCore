@@ -25,7 +25,7 @@ namespace Discount.Api.Controllers
         {
             return Ok(await _Client.GetDiscountedProductAsync(productName));
         }
-        [HttpPost()]
+        [HttpPost]
         public async Task<ActionResult> AddProductsToDiscounts([FromBody] DiscountedProduct product)
         {
             await _Client.AddDiscountedProductAsync(product);
@@ -34,14 +34,28 @@ namespace Discount.Api.Controllers
         [HttpPatch]
         public async Task<ActionResult> UpdateDiscountedProducts([FromBody] DiscountedProduct product)
         {
-            await _Client.UpdateDiscountedProductAsync(product);
-            return Ok(new {Message="Sucessfully updated"});
+            try
+            {
+                await _Client.UpdateDiscountedProductAsync(product);
+                return Ok(new { Message = "Sucessfully updated" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpDelete("{productName}")]
         public async Task<ActionResult> DeleteDiscountedProduct(string productName)
         {
-            await _Client.DeleteDiscountedProductAsync(productName);
-            return Ok(new {Message="Sucessfully deleted"});
+            try
+            {
+                await _Client.DeleteDiscountedProductAsync(productName);
+                return Ok(new { Message = "Sucessfully deleted" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
