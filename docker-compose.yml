@@ -34,7 +34,8 @@ services:
     build:
       context: .
       dockerfile: Services\GRPC\Discount.Grpc\Dockerfile
-
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
 volumes:
   portainer_data:
   mongo_store:
