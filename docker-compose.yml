@@ -36,6 +36,9 @@ services:
       dockerfile: Services\GRPC\Discount.Grpc\Dockerfile
   orderdb:
     image: mcr.microsoft.com/mssql/server:2017-latest
+  
+  rabbitmq:
+    image : docker pull rabbitmq:3.10.0-management-alpine
 volumes:
   portainer_data:
   mongo_store:
