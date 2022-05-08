@@ -38,7 +38,13 @@ services:
     image: mcr.microsoft.com/mssql/server:2017-latest
   
   rabbitmq:
-    image : docker pull rabbitmq:3.10.0-management-alpine
+    image : rabbitmq:3.10.0-management-alpine
+  order.api:
+    image: ${DOCKER_REGISTRY-}orderapi
+    build:
+      context: .
+      dockerfile: Services/Order/Order.Api/Dockerfile
+
 volumes:
   portainer_data:
   mongo_store:
@@ -51,6 +57,7 @@ volumes:
 
 
  
+
 
 
 

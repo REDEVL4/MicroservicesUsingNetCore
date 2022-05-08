@@ -1,5 +1,9 @@
-﻿using Basket.Api.Repository;
+﻿using AutoMapper;
+using Basket.Api.Publisher;
+using Basket.Api.Repository;
 using Basket.Api.Services;
+using MassTransit;
+using MessagingBrokerDefaults.Models;
 using Microsoft.AspNetCore.Mvc;
 namespace Basket.Api.Controllers
 {
@@ -7,12 +11,16 @@ namespace Basket.Api.Controllers
     [ApiController]
     public class BasketController : ControllerBase
     {
+        private IMapper _mapper;
+        private IPublishEndpoint _publish;
         private readonly DServices _services;
         private IBasketRepository _basketRepository;
-        public BasketController(IBasketRepository basketRepository,DServices services)
+        public BasketController(IBasketRepository basketRepository,IMapper mapper,DServices services,IPublishEndpoint publish)
         {
+            _mapper = mapper;
             _services = services;
             _basketRepository= basketRepository;
+            _publish = publish;
         }
         [HttpGet("{username}")]
         public async Task<ActionResult<Models.Basket>> GetBasket(string username)
@@ -46,6 +54,26 @@ namespace Basket.Api.Controllers
         {
             await _basketRepository.DeleteBasket(username);
             return Ok(new {Message=$"Sucessfully removed" });
+        }
+
+        [HttpPost("{actionName}")]
+        public async Task<ActionResult> CheckOut([FromBody] CheckOutModelForOrders Order)
+        {
+            if (Order == null)
+                 return BadRequest();
+            var basket=await _basketRepository.GetBasketAsync(Order.UserName);
+            var orderToPublish=_mapper.Map<CheckOutOrder>(Order);
+            orderToPublish.TotalPrice = basket.TotalPrice;
+            try
+            {
+                await _publish.Publish(orderToPublish);
+                await _basketRepository.DeleteBasket(Order.UserName);
+                return Accepted();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }
         }
     }
 }

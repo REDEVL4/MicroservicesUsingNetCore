@@ -1,3 +1,7 @@
+using MassTransit;
+using MessagingBrokerDefaults.Core;
+using MessagingBrokerDefaults.Models;
+using Order.Api.EventConsumer;
 using Order.Api.Extensions;
 using Order.Application;
 using Order.Infastructure;
@@ -11,6 +15,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMassTransit((context) =>
+{
+    context.AddConsumer<OrderEventConsumer>();
+    context.UsingRabbitMq((ctx, config) =>
+    {
+        config.Host(builder.Configuration.GetValue<string>("Secrets:RabbitMqHost"));
+        config.ReceiveEndpoint(Constants.QueueName, configure => configure.ConfigureConsumer(ctx,typeof(OrderEventConsumer))); ;
+    });
+});
 builder.Services.InfastructureServices(builder.Configuration);
 builder.Services.ApplicationServices();
 var app = builder.Build();

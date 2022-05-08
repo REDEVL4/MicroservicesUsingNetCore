@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MessagingBrokerDefaults.Core
 {
-    public class Constants
+    public static class Constants
     {
-        public string QueueName = "BasketToOrder"; 
+        public static string QueueName = "BasketToOrder"; 
     }
 }

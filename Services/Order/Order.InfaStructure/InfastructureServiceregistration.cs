@@ -19,7 +19,7 @@ namespace Order.Infastructure
     {
        public static IServiceCollection InfastructureServices(this IServiceCollection Services,IConfiguration configuration)
         {
-            Services.AddDbContext<OrderContext>(c => c.UseSqlServer("Data Source=localhost;Initial Catalog=OrderDb;User Id=sa;Password=Admin@1234;Integrated Security=True"));
+            Services.AddDbContext<OrderContext>(c => c.UseSqlServer(configuration.GetValue<string>("Secrets:ConnectionString1")));
             Services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
             Services.AddScoped<IOrderRepository,OrderRepository>();
             Services.Configure<EmailSetting>(configuration.GetSection("EmailSetting"));
