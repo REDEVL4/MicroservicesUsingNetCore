@@ -34,11 +34,11 @@ services:
     build:
       context: .
       dockerfile: Services\GRPC\Discount.Grpc\Dockerfile
-  orderdb:
-    image: mcr.microsoft.com/mssql/server:2017-latest
+  
   
   rabbitmq:
     image : rabbitmq:3.10.0-management-alpine
+  
   order.api:
     image: ${DOCKER_REGISTRY-}orderapi
     build:
@@ -57,6 +57,9 @@ volumes:
 
 
  
+
+
+
 
 
 

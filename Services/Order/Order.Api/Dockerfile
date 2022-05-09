@@ -7,6 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Services/Order/Order.Api/Order.Api.csproj", "Services/Order/Order.Api/"]
+COPY ["BuildingBlocks/MessagingBrokerDefaults/MessagingBrokerDefaults.csproj", "BuildingBlocks/MessagingBrokerDefaults/"]
 COPY ["Services/Order/Order.InfaStructure/Order.Infastructure.csproj", "Services/Order/Order.InfaStructure/"]
 COPY ["Services/Order/Order.Domain/Order.Domain.csproj", "Services/Order/Order.Domain/"]
 COPY ["Services/Order/Order.Application/Order.Application.csproj", "Services/Order/Order.Application/"]

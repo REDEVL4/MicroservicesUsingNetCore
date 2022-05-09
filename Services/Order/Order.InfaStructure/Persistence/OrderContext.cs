@@ -22,11 +22,11 @@ namespace Order.Infastructure.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedAt = DateTime.Now;
+                        entry.Entity.CreatedAt = DateTime.UtcNow;
                         entry.Entity.CreatedBy = "ngr";
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedAt = DateTime.Now;
+                        entry.Entity.LastModifiedAt = DateTime.UtcNow;
                         entry.Entity.ModifiedBy = "ngr";
                         break;
                 }

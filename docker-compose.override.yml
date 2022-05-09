@@ -25,18 +25,18 @@ services:
     restart: always
     ports:
       - "6379:6379" 
-  
   basket.api:
     container_name: basket.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "Secrets:RedisCS=basketdb:6379"
       - "Secrets:GRPC_Address=http://discount.grpc"
-      - "Secrets:RabbitMqHost=asmp://rabbitmq:5672"
+      - "Secrets:RabbitMqHost=amqp://guest:guest@rabbitmq:5672"
     ports:
       - "8001:80"
     depends_on:
       - basketdb
+      - rabbitmq
   
   portainer:
     container_name: portainer
@@ -72,13 +72,13 @@ services:
     restart: always
     ports:
       - "5432:5432" 
-  
+    
   
   discount.api:
     container_name: discount.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "Secrets:ConnectionString=Server=discountdb;port=5432;Database=DiscountedProducts;User Id=admin;Password=Admin@1234"
+      - "Secrets:ConnectionString=Server=discountdb;port=5432;Database=DiscountedProducts;User Id=admin;Password=admin1234"
     ports:
       - "8002:80"
     depends_on:
@@ -96,13 +96,6 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
-  orderdb:
-    container_name: orderdb
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Admin@1234"
-    ports:
-      - "1433:1433"
 
   rabbitmq:
     container_name: rabbitmq
@@ -110,12 +103,16 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  
+
+
   order.api:
     container_name: order.api
     environment:
-      - "Secrets:CS=Data Source=orderdb;Initial Catalog=OrderDb;User Id=sa;Password=Admin@1234;Integrated Security=True"
       - ASPNETCORE_ENVIRONMENT=Development
-
+      - "Secrets:ConnectionString=Server=discountdb;port=5432;Database=OrdersDb;User Id=admin;Password=admin1234"
     ports:
       - "8004:80"
+    depends_on:
+      - discountdb
 
