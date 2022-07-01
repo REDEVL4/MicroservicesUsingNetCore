@@ -110,6 +110,7 @@ services:
     container_name: order.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - "Secrets:RabbitMqHost=amqp://guest:guest@rabbitmq:5672"
       - "Secrets:ConnectionString=Server=discountdb;port=5432;Database=OrdersDb;User Id=admin;Password=admin1234"
     ports:
       - "8004:80"
